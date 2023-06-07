@@ -137,3 +137,15 @@ def q12(db: Database) -> list[dict]:
         {"grades": 1, "dob": 1, "first_name": 1, "_id": 0, "gender": 1})
 
     return list(res)
+
+def q13(db: Database) -> list[dict]:
+    """
+    Q: Get first subject of all males born on 2013-02-07 with grade greater than 8
+    """
+    res = db.students.find({
+        "gender": "Male",
+        "dob": "2023-02-07",
+        "grades": {"$elemMatch": {"grade": {"$gt": 8}}}},
+        {"grades.$": 1, "dob": 1, "first_name": 1, "_id": 0, "gender": 1})
+
+    return list(res)
