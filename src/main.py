@@ -8,5 +8,4 @@ if __name__=="__main__":
 
     db = get_db()
 
-    # pprint.pprint(q1(db))
-    pprint.pprint(q2(db))
+    pprint.pprint(q12(db))
