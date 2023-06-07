@@ -1,44 +1,28 @@
-import pprint
 from pymongo.database import Database
 
-def query_student_by_value(db: Database, field: str, value: int | str, many: bool=False) -> None:
+def q1(db: Database) -> list[dict]:
+    """
+    Q: Get first_name, last_name and gender of all students born on 2023-01-01
+    """
+    res = db.students.find({
+        "dob": "2023-01-01"
+    }, {"_id": 0, "first_name": 1, "last_name": 1, "gender": 1})
 
-    if many:
-        res = db.students.find({field: value})
-        for r in res:
-            pprint.pprint(r)
-    else:
-        res = db.students.find_one({field: value})
-        pprint.pprint(res)
+    return list(res)
 
-def query_students_by_operator(db: Database, field: str, operator: str, value: str, many: bool=False) -> None:
+def q2(db: Database) -> list[dict]:
+    """
+    Q: Get first_name, last_name, dob and gender of all males born on 2023-02-07
+    """
+    res = db.students.find({
+        "dob": "2023-02-07",
+        "gender": "Male"
+    }, {"_id": 0, "first_name": 1, "last_name": 1, "gender": 1, "dob": 1})
 
-    if many:
-        res = db.students.find({field: {
-            operator: value
-        }})
-
-        for r in res:
-            pprint.pprint(r)
-
-    else:
-        res = db.students.find_one({field: {
-            operator: value
-        }})
-        pprint.pprint(res)
+    return list(res)
 
 
-def query_students_by_logic_operator(db: Database, logic: str, fields: list, values: list, many: bool=False) -> None:
-    
-    if many:
-        res = db.students.find(
-            {logic: [{f:v} for f, v in zip(fields, values)]})
-
-        for r in res:
-            pprint.pprint(r)
-
-    else:
-        res = db.students.find_one(
-            {logic: [{f:v} for f, v in zip(fields, values)]})
-
-        pprint.pprint(res)
+def q2(db: Database) -> list[dict]:
+    """
+    Q: Get first_name, last_name, dob and gender of all males born on 2023-02-07
+    """
