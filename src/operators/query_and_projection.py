@@ -149,3 +149,27 @@ def q13(db: Database) -> list[dict]:
         {"grades.$": 1, "dob": 1, "first_name": 1, "_id": 0, "gender": 1})
 
     return list(res)
+
+def q14(db: Database) -> list[dict]:
+    """
+    Q: Get first subject of all males born on 2023-02-07 and 2023-01-01 with grade greater than 8. Sort by name ascending
+    """
+    res = db.students.find({
+        "gender": "Male",
+        "dob": {"$in": ["2023-02-07", "2023-01-01"]},
+        "grades": {"$elemMatch": {"grade": {"$gt": 8}}}},
+        {"grades.$": 1, "dob": 1, "first_name": 1, "_id": 0, "gender": 1}).sort({"first_name": 1, "dob": 1})
+
+    return list(res)
+
+def q15(db: Database) -> list[dict]:
+    """
+    Q: Get first subject of all males born on 2013-02-07 with grade greater than 8
+    """
+    res = db.students.find({
+        "gender": "Male",
+        "dob": "2023-02-07",
+        "grades": {"$elemMatch": {"grade": {"$gt": 8}}}},
+        {"grades.$": 1, "dob": 1, "first_name": 1, "_id": 0, "gender": 1}).limit(1)
+    
+    return list(res)
