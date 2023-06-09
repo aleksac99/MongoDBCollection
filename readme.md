@@ -1,7 +1,6 @@
-# PyMongo Query Collection
-This repository contains various queries of MongoDB Database, created as a practice of NoSQL Database querying.
+# PyMongo Problem Collection
 
-#  Future Work
-* Create examples for [$expr](https://www.mongodb.com/docs/manual/reference/operator/query/expr/) operator
-* Examples created until [Bitwise](https://www.mongodb.com/docs/manual/reference/operator/query-bitwise/) operators
-* Add tags to questions based on used operator
+This repository contains a collection of various problems regarding MongoDB Database querying. Queries are written in Python, using Pymongo driver for MongoDB.
+
+## Disclaimer - Work in Progress
+At this point, the repo is a simple collection of questions. The plan is to make fully working application which allows adding questions, marking questions as solved, adding and removing tags to eachs question, filtering questions using tags etc.
