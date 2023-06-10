@@ -2,5 +2,12 @@
 
 This repository contains a collection of various problems regarding MongoDB Database querying. Queries are written in Python, using Pymongo driver for MongoDB.
 
-## Disclaimer - Work in Progress
-At this point, the repo is a simple collection of questions. The plan is to make fully working application which allows adding questions, marking questions as solved, adding and removing tags to eachs question, filtering questions using tags etc.
+
+This repo represents a simple collection of queries I find worth revising. For now, it will be updated only by adding new problems in the same fashion as now. Potential idea for future work is to create a LeetCode-like application for MongoDB queries.
+
+## Problem Count
+
+| Topic                          | Total Problems | Solved |
+|--------------------------------|----------------|--------|
+| Query and Projection Operators |       15       |   15   |
+| Aggregation Pipelines          |       19       |   17   |
