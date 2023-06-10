@@ -1,4 +1,3 @@
-# TODO: Check all and make public
 from pymongo.database import Database
 
 def q1(db: Database) -> list:
