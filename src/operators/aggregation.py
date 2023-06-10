@@ -1,9 +1,9 @@
-# TODO: Check the validity of first 10 questions
+# TODO: Check all and make public
 from pymongo.database import Database
 
 def q1(db: Database) -> list:
     """
-    Q: Find number of people for each gender
+    Q: Find student count for each gender.
     """
     res = db.students.aggregate([
         {"$group": {"_id": "$gender", "cnt": {"$sum": 1}}}
@@ -12,7 +12,7 @@ def q1(db: Database) -> list:
 
 def q2(db: Database) -> list:
     """
-    Q: Find number of people for each gender born before 2000-01-01
+    Q: Find student count for each gender of all students born before 2000-01-01.
     """
     res = db.students.aggregate([
         {"$match": {"dob": {"$lt": "2000-01-01"}}},
@@ -22,7 +22,7 @@ def q2(db: Database) -> list:
 
 def q3(db: Database) -> list:
     """
-    Q: Find dates of birth of all females born before 1995-01-01
+    Q: Find dates of birth of all females born before 1995-01-01.
     """
     res = db.students.aggregate([
         {"$match": {"gender": "Female", "dob": {"$lt": "1995-01-01"}}},
@@ -32,7 +32,7 @@ def q3(db: Database) -> list:
 
 def q4(db: Database) -> list:
     """
-    Q: Find number of distinct dates of birth of all females born before 2022-07-01
+    Q: Find number of distinct dates of birth of all females born before 2022-07-01.
     """
     res = db.students.aggregate([
         {"$match": {"gender": "Female", "dob": {"$lt": "2022-07-01"}}},
@@ -43,47 +43,17 @@ def q4(db: Database) -> list:
 
 def q5(db: Database) -> list:
     """
-    Q: Return grades if its size is 3
+    Q: For each female born in 1995 graded in Roman History, return their Roman History grade. 
     """
     res = db.students.aggregate([
-        {"$match": {"dob": "2023-02-07"}},
-        {"$project": {"name": "$first_name", "dob": 1, "_id": 0, "java_grade": "$grades"}}
+        {"$match": {"gender": "Female", "dob": {"$gte": "1995-01-01"}, "dob": {"$lte": "1995-12-31"}}},
+        {"$unwind": "$subjects"},
+        {"$match": {"subjects.subject": "Roman History"}},
+        {"$project": {"name": {"$concat": ["$first_name", " ", "$last_name"]}, "dob": 1, "gender": 1, "_id": 0, "history_grade": "$subjects.grade"}}
     ])
     return list(res)
-
 
 def q6(db: Database) -> list:
-    """
-    Q: Return grades if its size is 3
-    """
-    res = db.students.aggregate([
-        {"$unwind": "$grades"},
-        # {"$match": {"grades.subject": "Rust", "gender": {"$nin": ["Male", "Female"]}}},
-        {"$group": {"_id": "$grades.subject", "average": {"$avg": "$grades.grade"}}},
-        {"$project": {"lang": "$_id", "_id": 0, "average": 1}},
-        {"$sort": {"average": -1}}
-        # {"$count": "num_rust_grades"}
-    ])
-    return list(res)
-
-def q7(db: Database) -> list:
-    """
-    Q: Return grades if its size is 3
-    """
-    res = db.students.aggregate([
-        {"$unwind": "$subjects"},
-        # {"$match": {"grades.subject": "Rust", "gender": {"$nin": ["Male", "Female"]}}},
-        {"$group": {"_id": "$subjects.subject", "count": {"$sum": 1}}},
-        {"$project": {"lang": "$_id", "_id": 0, "count": 1}},
-        {"$sort": {"count": -1}}
-        # {"$count": "num_rust_grades"}
-    ])
-    return list(res)
-
-
-# -------------------------------------------------------------------------
-
-def q11(db: Database) -> list:
     """
     Q: Find all first year students. Sort by date of birth, return maximum 10 results
     """
@@ -95,7 +65,7 @@ def q11(db: Database) -> list:
 
     return list(res)
 
-def q12(db: Database) -> list:
+def q7(db: Database) -> list:
     """
     Q: Find all students born after 2002-12-01.
     """
@@ -106,9 +76,9 @@ def q12(db: Database) -> list:
     return list(res)
 
 
-def q13(db: Database) -> list:
+def q8(db: Database) -> list:
     """
-    Q: For each date where more than 1 student have birthday, find name and year of those student grouped by date of birth.
+    Q: Get names and year of each student grouped by their date of birth, for all dates with two or more students born on that day.
     """
     res = db.students.aggregate([
         {"$group": {
@@ -123,9 +93,9 @@ def q13(db: Database) -> list:
     return list(res)
 
 
-def q14(db: Database) -> list:
+def q9(db: Database) -> list:
     """
-    Q: Find average year of studies for all genders
+    Q: Find average year of studies for all genders. Round average year to two decimals.
     """
     res = db.students.aggregate([
         {"$group": {"_id": "$gender", "avg_year": {"$avg": "$year"}}},
@@ -136,9 +106,9 @@ def q14(db: Database) -> list:
     return list(res)
 
 
-def q15(db: Database) -> list:
+def q10(db: Database) -> list:
     """
-    Q: Find number of exam tries for all people born in  January or February 1999
+    Q: Find number of entrance exam tries for all people born in January or February 1999.
     """
     res = db.students.aggregate([
         {"$match": {"$and": [{"dob": {"$gte": "1999-01-01"}}, {"dob": {"$lte": "1999-03-01"}}]}},
@@ -147,7 +117,7 @@ def q15(db: Database) -> list:
 
     return list(res)
 
-def q16(db: Database) -> list:
+def q11(db: Database) -> list:
     """
     Q: Find average last entrance exam result for people born between 1999-01-01 and 1999-03-01 grouped by gender.
     """
@@ -160,9 +130,9 @@ def q16(db: Database) -> list:
     return list(res)
 
 
-def q17(db: Database) -> list:
+def q12(db: Database) -> list:
     """
-    Q: Group by tags
+    Q: Group students by tags.
     """
     res = db.students.aggregate([
         {"$unwind": "$tags"},
@@ -174,9 +144,9 @@ def q17(db: Database) -> list:
     return list(res)
 
 
-def q18(db: Database) -> list:
+def q13(db: Database) -> list:
     """
-    Q: Find average year for each tag that occurs more than 15 times.
+    Q: Find average year for each tag that occurs more than 15 times. Sort by average year ascending.
     """
     res = db.students.aggregate([
         {"$unwind": "$tags"},
@@ -188,9 +158,9 @@ def q18(db: Database) -> list:
 
     return list(res)
 
-def q19(db: Database) -> list:
+def q14(db: Database) -> list:
     """
-    Q: Find email with maximum number of letters for each gender
+    Q: Find email with maximum number of letters for each gender among students born between 1999-01-01 and 1999-03-01.
     """
     res = db.students.aggregate([
         {"$match": {"$and": [{"dob": {"$gte": "1999-01-01"}}, {"dob": {"$lte": "1999-03-01"}}]}},
@@ -199,6 +169,53 @@ def q19(db: Database) -> list:
             "max_lets": 1,
             "email": {"$first": {"$filter": {"input": "$emails", "as": "tmp", "cond": {"$eq": ["$$tmp.size", "$max_lets"]}}}}}},
         {"$project": {"email": "$email.email", "size": "$max_lets"}}
+    ])
+
+    return list(res)
+
+
+def q15(db: Database) -> list:
+    """
+    Q: Find average grade for each person born from 1999-01-01 and 1999-03-01.
+    """
+    res = db.students.aggregate([
+        {"$match": {"$and": [{"dob": {"$gte": "1999-01-01"}}, {"dob": {"$lte": "1999-03-01"}}]}},
+        {"$unwind": "$subjects"},
+        {"$group": {"_id": "$_id", "avg_grade": {"$avg": "$subjects.grade"},
+                    "name": {"$first": {"$concat": ["$first_name", " ", "$last_name"]}}}},
+        {"$project": {"_id": 0, "avg_grade": {"$round": ["$avg_grade", 2]}, "name": 1}}
+    ])
+
+    return list(res)
+
+
+def q16(db: Database) -> list:
+    """
+    Q: Find a person with the highest grade average with at least 7 grades.
+    """
+    res = db.students.aggregate([
+        {"$match": {"subjects.6": {"$exists": True}}},
+        {"$unwind": "$subjects"},
+        {"$group": {"_id": {"$concat": ["$first_name", " ", "$last_name"]}, "avg_grade": {"$avg": "$subjects.grade"}}},
+        {"$sort": {"avg_grade": -1}},
+        {"$limit": 1}
+    ])
+
+    return list(res)
+
+def q17(db: Database) -> list:
+    """
+    Q: Find a person with max and min average from the list of persons with more than 7 grades.
+    """
+    res = db.students.aggregate([
+        {"$match": {"subjects.7": {"$exists": True}}},
+        {"$unwind": "$subjects"},
+        {"$group": {"_id": {"$concat": ["$first_name", " ", "$last_name"]}, "avg_grade": {"$avg": "$subjects.grade"}}},
+        {"$sort": {"avg_grade": -1}},
+        {"$group": {"_id": None, "max_name": {"$first": "$_id"}, "max_grade": {"$first": "$avg_grade"},
+                                 "min_name": {"$last": "$_id"}, "min_grade": {"$last": "$avg_grade"}}},
+        {"$project": {"_id": 0, "max_person": {"max_name": "$max_name", "max_grade": "$max_grade"},
+                                "min_person": {"min_name": "$min_name", "min_grade": "$min_grade"}}}
     ])
 
     return list(res)
